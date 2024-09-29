@@ -1,0 +1,69 @@
+Product
+	Prd_Id
+	Prd_Name
+	Prd_details
+	Prd_Cat_Id
+	Prd_Brd_Id
+	Prd_Price
+	Prd_CostPrice
+	Prd_Img
+	Prd_Status
+
+
+Category
+	Cat_Id
+	Cat_Name
+ 	Cat_Status
+
+brand
+	Brd_Id
+	Brd_Name
+	Brd_Status
+
+SerialNumber
+	Serial_Id
+	Serial_Prd_Id
+	Serial_SerialNumber
+	Serial_Status
+
+Customer
+	Cus_Id
+	Cus_FullName
+	Cus_Email
+	Cus_Phone
+	Cus_Status
+
+Order
+	Ord_Id
+	Cus_Id
+	Emp_Id
+	Ord_Date
+	Ord_Dis_Id
+	Ord_TotalAmount
+	Ord_Payment
+	Ord_Status
+
+OrderDetailID
+	OrdDtl_Id
+	OrdDtl_Ord_Id
+	OrdDtl_Serial_Id
+	OrdDtl_Price
+
+Discount (ส่วนลด): เก็บข้อมูลส่วนลดที่สามารถใช้ได้
+	Dis_Id
+	Dis_Description
+	Dis_Percentage
+	Dis_Start
+	Dis_End
+	Dis_Status
+
+Employee 
+	Emp_Id
+	Emp_FullName
+	Emp_Address
+	Emp_Role
+	Emp_Email
+	Emp_Password
+	Emp_Status
+	Emp_Img
+	Emp_Tel
