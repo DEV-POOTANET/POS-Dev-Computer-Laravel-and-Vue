@@ -11,7 +11,7 @@ import DocsExample from '@/components/DocsExample'
 
 // axios
 import axios from 'axios'
-axios.defaults.baseURL = 'http://localhost:3030'
+axios.defaults.baseURL = 'http://localhost:8000'
 
 const app = createApp(App)
 app.use(createPinia())
