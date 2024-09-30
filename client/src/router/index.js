@@ -46,12 +46,12 @@ const routes = [
         component: () => import('../views/manageProduct/manageBrand.vue'),
         meta: { requiresAuth: true, roles: [1, 2] },
       },
-      {
-        path: '/typography',
-        name: 'Typography',
-        component: () => import('../views/widgets/WidgetsStatsTypeA.vue'),
-        meta: { requiresAuth: true, roles: [1] },  // เฉพาะ role 1 เท่านั้น
-      },
+      // {
+      //   path: '/typography',
+      //   name: 'Typography',
+      //   component: () => import('../views/widgets/WidgetsStatsTypeA.vue'),
+      //   meta: { requiresAuth: true, roles: [1] },  // เฉพาะ role 1 เท่านั้น
+      // },
       {
         path: '/manageEmp',
         name: 'จัดการพนักงาน',
@@ -62,7 +62,7 @@ const routes = [
         path: '/manageCus',
         name: 'จัดการลูกค้า',
         component: () => import('../views/manageUser/manageCus.vue'),
-        meta: { requiresAuth: true, roles: [1] },  // เฉพาะ role 1 เท่านั้น
+        meta: { requiresAuth: true, roles: [1,2] },  
       },
     ],
   },
@@ -84,31 +84,36 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   console.log('Token:', authStore.token); // แสดง token ใน console
-  // console.log(to.meta.roles && !to.meta.roles.includes(authStore.role));
+
   // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่
   if (authStore.token) {
     // ถ้าผู้ใช้ล็อกอินแล้ว และกำลังพยายามเข้าถึงหน้า Login
     if (to.name === 'Login') {
-      next({ name: 'Dashboard' }); // เปลี่ยนเส้นทางไปที่แดชบอร์ด
-    } else {
-      next(); // อนุญาตให้เข้าใช้เส้นทางอื่นๆ
+      return next({ name: 'Dashboard' });
+    }
+    
+    // ตรวจสอบ role ว่าสามารถเข้าถึงเส้นทางได้หรือไม่
+    if (to.meta.roles && to.meta.roles.filter( el => el == authStore.role).length <= 0) {
+      // ตรวจสอบว่าเราไม่ได้อยู่ในหน้า Dashboard อยู่แล้ว
+      if (to.name !== 'Dashboard') {
+        return next({ name: 'Dashboard' }); // เปลี่ยนเส้นทางไปที่แดชบอร์ดถ้าบทบาทไม่ถูกต้อง
+      } else {
+        return next(false); // ยกเลิกการเปลี่ยนเส้นทางถ้าพยายามเปลี่ยนไปหน้าเดิม
+      }
     }
 
-    if (to.meta.roles && !to.meta.roles.includes(authStore.role)) {
-      // ตรวจสอบ role ว่าสามารถเข้าถึงเส้นทางได้หรือไม่
-      next({ name: 'Dashboard' }); // ถ้าบทบาทไม่ถูกต้อง เปลี่ยนเส้นทางไปที่แดชบอร์ด
-    }else {
-      next(); // อนุญาตให้เข้าใช้เส้นทางอื่นๆ
-    }
+    return next(); // ถ้า role ถูกต้อง อนุญาตให้เข้าถึง
   } else {
     // ตรวจสอบว่าเส้นทางต้องการการล็อกอินหรือไม่
-    if (to.meta.requiresAuth && !authStore.token) {
-      next({ name: 'Login' }); // เปลี่ยนเส้นทางไปที่เข้าสู่ระบบถ้าไม่ได้ล็อกอิน
-    }  else {
-      next(); // ให้ดำเนินการไปตามเส้นทางปกติ
+    if (to.meta.requiresAuth) {
+      return next({ name: 'Login' }); // เปลี่ยนเส้นทางไปที่เข้าสู่ระบบถ้าไม่ได้ล็อกอิน
     }
+
+    return next(); // ให้ดำเนินการไปตามเส้นทางปกติ
   }
 });
+
+
 
 
 export default router

@@ -28,7 +28,7 @@ const sidebar = useSidebarStore()
     </CSidebarHeader>
     <AppSidebarNav />
     <CSidebarFooter class="border-top d-none d-lg-flex">
-      <CSidebarToggler @click="sidebar.toggleUnfoldable()" />
+      <CSidebarToggler @click="sidebar.toggleUnfoldable()"/>
     </CSidebarFooter>
   </CSidebar>
 </template>

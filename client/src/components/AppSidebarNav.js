@@ -2,6 +2,7 @@ import { defineComponent, h, onMounted, ref, resolveComponent } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
 import { CBadge, CSidebarNav, CNavItem, CNavGroup, CNavTitle } from '@coreui/vue'
+import { useAuthStore } from '@/stores/auth' // นำ authStore มาใช้งาน
 import nav from '@/_nav.js'
 
 import simplebar from 'simplebar-vue'
@@ -48,6 +49,7 @@ const AppSidebarNav = defineComponent({
   },
   setup() {
     const route = useRoute()
+    const authStore = useAuthStore() // ดึงข้อมูลจาก authStore
     const firstRender = ref(true)
 
     onMounted(() => {
@@ -55,6 +57,12 @@ const AppSidebarNav = defineComponent({
     })
 
     const renderItem = (item) => {
+      // ตรวจสอบ role ก่อนที่จะ render เมนู
+      if (item.roles && item.roles.filter( el => el == authStore.role).length <= 0) {
+        // ถ้าผู้ใช้ไม่มีสิทธิ์ใน role ของเมนูนั้น จะไม่แสดงเมนูเลย
+        return null
+      }
+
       if (item.items) {
         return h(
           CNavGroup,

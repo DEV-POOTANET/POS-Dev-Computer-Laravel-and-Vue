@@ -24,7 +24,6 @@ const login = async () => {
     isLoading.value = false
   }
 }
-
 </script>
 
 <template>
@@ -39,11 +38,11 @@ const login = async () => {
                 <CForm @submit.prevent="login">
                   <h1>Login</h1>
                   <p class="text-body-secondary">Sign In to your account</p>
-                  
-                  <!-- แสดงข้อความผิดพลาด -->
-                  <div v-if="errorMessage" class="alert alert-danger">
+
+                  <!--error เดิม -->
+                  <!-- <div v-if="errorMessage" class="alert alert-danger">
                     {{ errorMessage }}
-                  </div>
+                  </div> -->
 
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
@@ -87,6 +86,16 @@ const login = async () => {
         </CCol>
       </CRow>
     </CContainer>
+
+    <!-- Toaster แสดง error -->
+    <CToaster class="p-3" placement="top-end">
+      <CToast v-if="errorMessage" visible autohide delay="5000" class="bg-danger text-white">
+        <CToastHeader closeButton class="bg-danger text-white">
+          <span class="me-auto fw-bold">Error</span>
+        </CToastHeader>
+        <CToastBody>{{ errorMessage }}</CToastBody>
+      </CToast>
+    </CToaster>
   </div>
 </template>
 

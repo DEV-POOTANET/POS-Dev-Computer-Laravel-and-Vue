@@ -1,7 +1,17 @@
 <script setup>
 import avatar from '@/assets/images/avatars/8.jpg'
-
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 const itemsCount = 42
+
+
+const authStore = useAuthStore()
+const router = useRouter()
+const handleLogout = async () => {
+  
+  await authStore.logout()  // เรียกใช้ฟังก์ชัน logout
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -50,7 +60,10 @@ const itemsCount = 42
       </CDropdownItem>
       <CDropdownDivider />
       <CDropdownItem> <CIcon icon="cil-shield-alt" /> Lock Account </CDropdownItem>
-      <CDropdownItem> <CIcon icon="cil-lock-locked" /> Logout </CDropdownItem>
+      <!-- <CDropdownItem> <CIcon icon="cil-lock-locked" /> Logout </CDropdownItem> -->
+      <CDropdownItem @click="handleLogout">
+        <CIcon icon="cil-lock-locked" /> Logout
+     </CDropdownItem>
     </CDropdownMenu>
   </CDropdown>
 </template>

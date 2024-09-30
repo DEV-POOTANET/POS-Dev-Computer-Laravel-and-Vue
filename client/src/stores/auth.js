@@ -28,13 +28,27 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const logout = () => {
-    user.value = null
-    token.value = null
-    role.value = null
-    localStorage.removeItem('token')
-    localStorage.removeItem('role') // ลบ role ออกจาก localStorage ด้วย
+  const logout = async () => {
+    try {
+      // เรียก API ลบ token ของผู้ใช้ฝั่ง backend
+      await axios.post('http://localhost:8000/api/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token.value}`
+        }
+      })
+    } catch (error) {
+      console.error('Logout failed', error)
+    } finally {
+      // ล้างข้อมูลใน auth store และ localStorage
+      user.value = null
+      token.value = null
+      role.value = null
+      localStorage.removeItem('token')
+      localStorage.removeItem('role')
+      
+    }
   }
+  
 
   return {
     user,
