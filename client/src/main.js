@@ -9,6 +9,7 @@ import CIcon from '@coreui/icons-vue'
 import { iconsSet as icons } from '@/assets/icons'
 import DocsExample from '@/components/DocsExample'
 
+
 // axios
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:8000'

@@ -50,7 +50,7 @@ const addToCart = (product) => {
 </script>
 
 <template>
-  <div class="container py-5">
+  <div class="container py-2">
     <!-- Card ใหญ่ครอบทั้งส่วนสินค้าและตะกร้า -->
     <div class="card shadow-lg">
       <div class="card-header">

@@ -7,7 +7,10 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const token = ref(localStorage.getItem('token') || null) // ดึง token จาก localStorage
   const role = ref(localStorage.getItem('role') || null) // ดึง role จาก localStorage
-  
+  const name = ref(localStorage.getItem('name') || null)
+  const uid = ref(localStorage.getItem('uid') || null)
+
+
   const login = async (email, password) => {
     try {
       const response = await axios.post('http://localhost:8000/api/login', {
@@ -18,10 +21,16 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = response.data.user
       token.value = response.data.token
       role.value = response.data.user.role
+      name.value = response.data.user.fullname
+      uid.value = response.data.user.id
+      
+
       
       // เก็บ token และ role ลง localStorage
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('role', response.data.user.role) // เก็บ role ด้วย
+      localStorage.setItem('name', response.data.user.fullname) 
+      localStorage.setItem('uid', response.data.user.id) 
     } catch (error) {
       console.error('Login failed', error)
       throw error

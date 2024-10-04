@@ -48,14 +48,24 @@ class AuthController extends Controller
     
         // Check email
         $user = User::where('email', $fields['email'])->first();
-    
+        
+        
         // Check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
                 'status' => false,
                 'message' => 'Login failed'
             ], 401);
-        } else {
+
+        
+        }else if ($user->status != 1) {
+            return response([
+                'status' => false,
+                'message' => 'Account is inactive'
+            ], 403); // 403 Forbidden
+        }
+        else 
+        {
             // ลบ token เก่าก่อนแล้วค่อยสร้างใหม่
             $user->tokens()->delete();
             // Create token
@@ -80,6 +90,16 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'Logged out'
         ];
+    }
+
+    public function getAllUser()
+    {
+        $userall = User::all();
+
+        return response()->json([
+            'message' => 'User retrieved successfully',
+            'data' => $userall,
+        ], 200);
     }
     
 }

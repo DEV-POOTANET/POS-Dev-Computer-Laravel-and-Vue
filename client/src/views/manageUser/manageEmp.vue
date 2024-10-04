@@ -1,3 +1,20 @@
+<script setup>
+import manageCusComponent from '../../components/manageUser/manageCusComponent.vue';
+</script>
+
 <template>
-    <h1>Manage Emp</h1>
+  <div>
+   <manageCusComponent></manageCusComponent>
+  </div>
 </template>
+
+<script>
+
+export default {
+  name: "manageCus",
+};
+</script>
+
+<style scoped>
+
+</style>

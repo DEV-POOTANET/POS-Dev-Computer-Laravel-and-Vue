@@ -19,7 +19,11 @@ const login = async () => {
     await authStore.login(email.value, password.value)
     router.push('/dashboard')
   } catch (error) {
-    errorMessage.value = 'Email หรือ Password ไม่ถูกต้อง'
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage.value = error.response.data.message // แสดงข้อความ error ที่ได้รับจาก API
+    } else {
+      errorMessage.value = 'เกิดข้อผิดพลาดบางอย่าง' // ถ้าไม่ได้รับข้อความจาก API
+    }
   } finally {
     isLoading.value = false
   }
