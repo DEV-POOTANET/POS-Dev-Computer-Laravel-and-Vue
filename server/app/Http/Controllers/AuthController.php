@@ -101,5 +101,65 @@ class AuthController extends Controller
             'data' => $userall,
         ], 200);
     }
+
+    public function getUser($id)
+    {
+        $user = User::find($id);
+
+        return response()->json([
+            'message' => 'User retrieved successfully',
+            'data' => $user,
+        ], 200);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        // ค้นหาผู้ใช้โดย ID
+        $user = User::find($id);
+
+        // ตรวจสอบว่าผู้ใช้มีอยู่หรือไม่
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // ตรวจสอบข้อมูลที่ส่งมา
+        $validatedData = $request->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'address' => 'nullable|string',
+            'tel' => 'required|string|unique:users,Tel,' . $id,
+            'role' => 'required|integer',
+        ]);
+
+        // อัปเดตข้อมูลผู้ใช้
+        $user->update($validatedData);
+
+        // ส่งข้อมูลกลับไปยังผู้ใช้
+        return response()->json([
+            'message' => 'User updated successfully',
+            'data' => $user,
+        ], 200);
+    }
+
+    public function suspendUser(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+            // สลับสถานะ
+            $user->status = $user->status == 1 ? 0 : 1;
+
+            // บันทึกการเปลี่ยนแปลง
+            $user->save();
+
+            return response()->json(['message' => 'User status updated successfully.']);
+        }
+
+        return response()->json(['message' => 'User not found.'], 404);
+    }
+
+
     
 }

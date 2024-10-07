@@ -2,6 +2,7 @@ import DefaultLayout from '@/layouts/DefaultLayout'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
+
 // Define routes
 const routes = [
   {
@@ -63,6 +64,18 @@ const routes = [
         name: 'จัดการลูกค้า',
         component: () => import('../views/manageUser/manageCus.vue'),
         meta: { requiresAuth: true, roles: [1,2] },  
+      },
+      {
+        path: '/registerEmp',
+        name: 'ลงทะเบียนพนักงาน',
+        component: () => import('../components/manageUser/RegisterEmpForm.vue'),
+        meta: { requiresAuth: true, roles: [1] },  
+      },
+      {
+        path: '/EditEmp/:id',
+        name: 'แก้ไขข้อมูลพนักงาน',
+        component: () => import('../components/manageUser/EditEmpForm.vue'),
+        meta: { requiresAuth: true, roles: [1] },  
       },
     ],
   },
