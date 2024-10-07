@@ -38,7 +38,7 @@
               <td>{{ user.fullname }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.address }}</td>
-              <td>{{ user.Tel }}</td>
+              <td>{{ user.tel }}</td>
               <td>
                 <span 
                   :class="user.status == 1 ? 'status-active' : 'status-inactive'"

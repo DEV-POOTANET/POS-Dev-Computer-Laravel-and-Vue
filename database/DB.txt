@@ -1,9 +1,8 @@
 Product
-	Prd_Id
+	id
 	Prd_Name
 	Prd_details
 	Prd_Cat_Id
-	Prd_Brd_Id
 	Prd_Price
 	Prd_CostPrice
 	Prd_Img
@@ -11,14 +10,11 @@ Product
 
 
 Category
-	Cat_Id
+	id
 	Cat_Name
  	Cat_Status
 
-brand
-	Brd_Id
-	Brd_Name
-	Brd_Status
+
 
 SerialNumber
 	Serial_Id
@@ -35,10 +31,9 @@ Customer
 
 Order
 	Ord_Id
-	Cus_Id
-	Emp_Id
+	Ord_Cus_Id
+	Ord_Emp_Id
 	Ord_Date
-	Ord_Dis_Id
 	Ord_TotalAmount
 	Ord_Payment
 	Ord_Status
@@ -49,13 +44,7 @@ OrderDetailID
 	OrdDtl_Serial_Id
 	OrdDtl_Price
 
-Discount (ส่วนลด): เก็บข้อมูลส่วนลดที่สามารถใช้ได้
-	Dis_Id
-	Dis_Description
-	Dis_Percentage
-	Dis_Start
-	Dis_End
-	Dis_Status
+
 
 Employee 
 	Emp_Id

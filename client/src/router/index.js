@@ -41,12 +41,6 @@ const routes = [
         component: () => import('../views/manageProduct/manageCat.vue'),
         meta: { requiresAuth: true, roles: [1, 2] },
       },
-      {
-        path: '/manageBrand',
-        name: 'จัดการยี่ห้อ',
-        component: () => import('../views/manageProduct/manageBrand.vue'),
-        meta: { requiresAuth: true, roles: [1, 2] },
-      },
       // {
       //   path: '/typography',
       //   name: 'Typography',

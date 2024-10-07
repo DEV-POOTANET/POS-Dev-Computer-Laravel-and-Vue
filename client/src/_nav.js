@@ -37,13 +37,6 @@ export default [
     roles: [1, 2]
   },
   {
-    component: 'CNavItem',
-    name: 'จัดการยี่ห้อ',
-    to: '/manageBrand',
-    icon: 'cil-pencil',
-    roles: [1, 2]
-  },
-  {
     component: 'CNavTitle',
     name: 'จัดการผู้ใช้',
     roles: [1, 2]
