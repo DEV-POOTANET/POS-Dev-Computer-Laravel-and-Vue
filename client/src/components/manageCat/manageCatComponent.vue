@@ -105,7 +105,7 @@
       },
   
       async addCategory() {
-        this.$router.push('/addCategory');
+        this.$router.push('/AddCat');
       },
   
       async editCategory(catId) {

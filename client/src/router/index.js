@@ -71,6 +71,18 @@ const routes = [
         component: () => import('../components/manageUser/EditEmpForm.vue'),
         meta: { requiresAuth: true, roles: [1] },  
       },
+      {
+        path: '/AddCat',
+        name: 'เพิ่มหมวดหมู่',
+        component: () => import('../components/manageCat/addCatForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
+      {
+        path: '/editCategory/:id',
+        name: 'แก้ไขหมวดหมู่',
+        component: () => import('../components/manageCat/editCatForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
     ],
   },
   {
