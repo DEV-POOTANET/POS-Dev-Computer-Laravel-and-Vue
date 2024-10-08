@@ -1,3 +1,20 @@
+<script setup>
+import manageCatComponent from '../../components/manageCat/manageCatComponent.vue';
+</script>
+
 <template>
-    <h1>manageCat</h1>
+  <div>
+   <manageCatComponent></manageCatComponent>
+  </div>
 </template>
+
+<script>
+
+export default {
+  name: "manageCat",
+};
+</script>
+
+<style scoped>
+
+</style>
