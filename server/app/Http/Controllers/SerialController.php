@@ -39,18 +39,40 @@ class SerialController extends Controller
      */
     public function store(Request $request)
     {
+        // $validatedData = $request->validate([
+        //     'Prd_id' => 'required|exists:products,id',
+        //     'Serial_SerialNumber' => 'required|string|unique:serials,Serial_SerialNumber',
+        //     'Serial_Status' => 'required|boolean',
+        // ]);
+
+        // $serial = Serial::create($validatedData);
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Serial added successfully!',
+        //     'data' => $serial,
+        // ], 201);
+
+         // Validate the input data
         $validatedData = $request->validate([
-            'Prd_id' => 'required|exists:products,id',
-            'Serial_SerialNumber' => 'required|string|unique:serials,Serial_SerialNumber',
-            'Serial_Status' => 'required|boolean',
+            'serials' => 'required|array', // รับข้อมูลเป็นอาเรย์
+            'serials.*.Prd_id' => 'required|exists:products,id',
+            'serials.*.Serial_SerialNumber' => 'required|string|unique:serials,Serial_SerialNumber',
+            'serials.*.Serial_Status' => 'required|boolean',
         ]);
 
-        $serial = Serial::create($validatedData);
+        // เก็บผลลัพธ์ของ serial ที่เพิ่มเข้าไปในฐานข้อมูล
+        $createdSerials = [];
+
+        foreach ($validatedData['serials'] as $serialData) {
+            $serial = Serial::create($serialData);
+            $createdSerials[] = $serial; 
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Serial added successfully!',
-            'data' => $serial,
+            'message' => 'Serials added successfully!',
+            'data' => $createdSerials,
         ], 201);
     }
 

@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::put('Product/{id}',[ProductController::class,'update']);
 
     Route::get('products/{productId}/serials', [SerialController::class, 'index']); 
-    Route::post('/serials', [SerialController::class, 'store']);
+    Route::post('serials', [SerialController::class, 'store']);
     Route::get('serials/{id}', [SerialController::class, 'show']);
     Route::put('serials/{id}', [SerialController::class, 'update']);
 

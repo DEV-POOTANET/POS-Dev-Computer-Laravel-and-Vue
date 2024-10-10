@@ -95,6 +95,18 @@ const routes = [
         component: () => import('../components/managePrd/EditPrdForm.vue'),
         meta: { requiresAuth: true, roles: [1,2] },  
       },
+      {
+        path: '/EditSn/:id',
+        name: 'แก้ไขSerialNumbers',
+        component: () => import('../components/managePrd/EditSnForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
+      {
+        path: '/AddSn/:id',
+        name: 'เพิ่มSerialNumbers',
+        component: () => import('../components/managePrd/AddSnForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
     ],
   },
   {

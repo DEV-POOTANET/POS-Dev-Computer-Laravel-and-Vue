@@ -24,7 +24,10 @@
                                                 <th>ชื่อสินค้า</th>
                                                 <th>ราคา</th> 
                                                 <th>แก้ไข</th>
-                                                <th>รายละเอียด</th>
+                                                <th>เพิ่มSN</th>
+                                                <th>ดู</th>
+                                                
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -35,16 +38,21 @@
                                                 <td>{{ product.Prd_Name }}</td>
                                                 <td>{{ currency(product.Prd_Price) }}</td>                                                
                                                 <td>
-                                                  <button class="btn btn-warning" @click="$router.push(`/EditPrd/${product.id}`)">
+                                                  <button class="btn btn-warning btn-sm" @click="$router.push(`/EditPrd/${product.id}`)">
                                                     แก้ไข
                                                   </button>
 
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-primary" @click="showDetails(product)">
+                                                  <button class="btn btn-success btn-sm" @click="$router.push(`/AddSn/${product.id}`)">
+                                                    เพิ่มSN
+                                                  </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-info btn-sm" @click="showDetails(product)">
                                                         ดู
                                                     </button>
-                                                </td>
+                                                </td>                                              
                                             </tr>
                                         </tbody>
                                     </table>
@@ -73,6 +81,25 @@
                                             <p><strong>หมวดหมู่ </strong> {{ getCategoryName(selectedProduct.Cat_id)}}</p>
                                             <p><strong>รายละเอียด:</strong> {{ selectedProduct.Prd_details }}</p>                                           
                                             <img :src="selectedProduct.Prd_Img" alt="Product Image" class="img-fluid" style="max-width: 200px;">
+
+                                            <div class="container-fluid">
+                                              <div class="card">
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <h4 class="card-title">จำนวนสินค้า</h4>
+                                                </div>
+
+                                                <div class="card-body">
+                                                  
+                                                    <p><strong>จำนวนสินค้าทั้งหมด : </strong>{{ countActive+countInActive }} รายการ</p>
+                                                    <p><strong>จำนวนสินค้าที่ขายแล้ว : </strong>{{countInActive  }} รายการ</p>
+                                                    <p><strong>จำนวนสินค้าในคลัง : </strong>{{countActive  }} รายการ</p>
+
+                                             
+                                                </div> 
+                                              </div>
+                                            </div>
+   
+
                                         </div>
                                         <div v-else>
                                             <p>กรุณาเลือกสินค้าจากรายการด้านซ้ายเพื่อดูรายละเอียด</p>
@@ -83,21 +110,49 @@
                         </div>
 
                         <div class="row mt-3">
-                            <div class="container-fluid">
-                                <div class="card shadow-lg">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title">รายการสินค้าที่มี</h3>
-                                        <button class="btn btn-primary" @click="">
-                                            เพิ่มรายการสินค้า
-                                        </button>
-                                    </div>
+                          <div class="container-fluid">
+                            <div class="card shadow-lg">
+                              <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="card-title">รายการสินค้าที่มี</h3>
+                              </div>
 
-                                    <div class="card-body">
-                                        หหห
-                                    </div>
+                              <div class="card-body table-responsive">
+                                <div v-if="serialNumbers.length > 0">
+                                  <table class="table table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th>Serial Number</th>
+                                        <th>สถานะ</th>
+                                        <th>จัดการ</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr v-for="serial in serialNumbers" :key="serial.id">
+                                        <td>{{ serial.Serial_SerialNumber }}</td>
+                                        <td>
+                                          <!-- วงกลมสีตามสถานะ พร้อมแสดงข้อความ -->
+                                          <span 
+                                            :class="serial.Serial_Status === 1 ? 'status-circle green' : 'status-circle red'"
+                                            class="me-2"></span>
+                                          {{ serial.Serial_Status === 1 ? 'อยู่ในคลัง' : 'ขายแล้ว' }}
+                                        </td>
+                                        <td>
+                                          <button class="btn btn-warning btn-sm" @click="$router.push(`/EditSn/${serial.id}`)">
+                                                    แก้ไข
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
                                 </div>
+                                <div v-else>
+                                  <p>ไม่มี serial numbers ที่จะแสดง</p>
+                                </div>
+                              </div>
                             </div>
+                          </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -116,6 +171,9 @@ export default {
       selectedProduct: null, // เก็บข้อมูลสินค้าที่เลือกเพื่อแสดงรายละเอียด
       categories: [], // เก็บข้อมูลหมวดหมู่ที่ดึงมา
       errorMessage: '', // เก็บข้อความข้อผิดพลาด
+      serialNumbers: [],
+      countActive:'',
+      countInActive:'',
     };
   },
   methods: {
@@ -149,8 +207,28 @@ export default {
         this.errorMessage = 'เกิดข้อผิดพลาดในการดึงข้อมูลหมวดหมู่';
       }
     },
+    async fetchSerialNumbers(productId) {
+      const authStore = useAuthStore();
+      const token = authStore.token;
+      try {
+        const response = await axios.get(`http://localhost:8000/api/products/${productId}/serials`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.serialNumbers = response.data.data; 
+        this.countActive = response.data.count_active; 
+        this.countInActive = response.data.count_inactive; 
+
+
+        // console.log(this.serialNumbers)
+      } catch (error) {
+        console.error('Error fetching serial numbers:', error);
+      }
+    },
     showDetails(product) {
       this.selectedProduct = product; // กำหนดสินค้าเป็นสินค้าเลือกเพื่อแสดงรายละเอียด
+      this.fetchSerialNumbers(product.id); 
     },
     currency(value) {
       return new Intl.NumberFormat('th-TH', {
@@ -192,4 +270,24 @@ export default {
   max-width: 100%; /* กำหนดขนาดภาพให้ปรับขนาดได้ */
   height: auto; /* ให้ภาพคงสัดส่วน */
 }
+
+.status-circle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
+}
+
+.me-2 {
+  margin-right: 8px;
+}
+
 </style>
