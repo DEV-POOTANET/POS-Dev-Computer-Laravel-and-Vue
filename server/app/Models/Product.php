@@ -22,4 +22,8 @@ class Product extends Model
     {
         return $this->belongsTo('App\Models\Cat','Cat_id')->select(['id','Cat_Name','Cat_Status']);
     }
+    public function serials()
+    {
+        return $this->hasMany(Serial::class)->orderBy('id','desc');
+    }
 }

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SerialController;
+
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -29,5 +31,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('Product/{id}',[ProductController::class,'show']);
     Route::post('/addProduct', [ProductController::class, 'store']);
     Route::put('Product/{id}',[ProductController::class,'update']);
+
+    Route::get('products/{productId}/serials', [SerialController::class, 'index']); 
+    Route::post('/serials', [SerialController::class, 'store']);
+    Route::get('serials/{id}', [SerialController::class, 'show']);
+    Route::put('serials/{id}', [SerialController::class, 'update']);
 
 });

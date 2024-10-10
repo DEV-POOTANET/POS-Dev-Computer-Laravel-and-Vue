@@ -17,8 +17,8 @@ Category
 
 
 SerialNumber
-	Serial_Id
-	Serial_Prd_Id
+	id
+	Prd_id
 	Serial_SerialNumber
 	Serial_Status
 
