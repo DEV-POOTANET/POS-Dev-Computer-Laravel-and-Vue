@@ -83,6 +83,18 @@ const routes = [
         component: () => import('../components/manageCat/editCatForm.vue'),
         meta: { requiresAuth: true, roles: [1,2] },  
       },
+      {
+        path: '/AddPrd',
+        name: 'เพิ่มสินค่า',
+        component: () => import('../components/managePrd/AddPrdForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
+      {
+        path: '/EditPrd/:id',
+        name: 'แก้ไขสินค่า',
+        component: () => import('../components/managePrd/EditPrdForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
     ],
   },
   {

@@ -1,3 +1,20 @@
+<script setup>
+import managePrdComponent from '../../components/managePrd/managePrdComponent.vue';
+</script>
+
 <template>
-    <h1>manageProduct</h1>
+  <div>
+   <managePrdComponent></managePrdComponent>
+  </div>
 </template>
+
+<script>
+
+export default {
+  name: "managePrd",
+};
+</script>
+
+<style scoped>
+
+</style>

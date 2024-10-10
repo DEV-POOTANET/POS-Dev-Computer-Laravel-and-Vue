@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatController;
+use App\Http\Controllers\ProductController;
+
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -22,5 +24,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('cat', [CatController::class, 'store']);
     Route::put('cat/{id}', [CatController::class, 'update']);
     Route::put('catUpdateStatus/{id}', [CatController::class, 'updateStatus']);
+
+    Route::get('Product',[ProductController::class,'index']);
+    Route::get('Product/{id}',[ProductController::class,'show']);
+    Route::post('/addProduct', [ProductController::class, 'store']);
+    Route::put('Product/{id}',[ProductController::class,'update']);
 
 });
