@@ -15,4 +15,9 @@ class Customer extends Model
         'Cus_email',
         'Cus_Status',
     ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class)->orderBy('id','desc');
+    }
 }

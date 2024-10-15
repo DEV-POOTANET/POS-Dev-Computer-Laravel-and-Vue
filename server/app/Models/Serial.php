@@ -17,4 +17,8 @@ class Serial extends Model
     {
         return $this->belongsTo('App\Models\Product','Prd_id')->select(['id','Prd_Name','Prd_Status']);
     }
+    public function order_details()
+    {
+        return $this->hasMany(OrderDetail::class)->orderBy('id','desc');
+    }
 }

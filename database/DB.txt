@@ -30,18 +30,19 @@ Customer
 	Cus_Status
 
 Order
-	Ord_Id
-	Ord_Cus_Id
-	Ord_Emp_Id
+	id
+	Cus_id
+	Emp_id
 	Ord_Date
+	Ord_Time
 	Ord_TotalAmount
 	Ord_Payment
 	Ord_Status
 
-OrderDetailID
-	OrdDtl_Id
-	OrdDtl_Ord_Id
-	OrdDtl_Serial_Id
+OrderDetail
+	id
+	Ord_id
+	Serial_id
 	OrdDtl_Price
 
 
