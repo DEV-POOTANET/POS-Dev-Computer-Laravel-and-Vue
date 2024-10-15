@@ -23,7 +23,7 @@ SerialNumber
 	Serial_Status
 
 Customer
-	Cus_Id
+	id
 	Cus_FullName
 	Cus_Email
 	Cus_Phone

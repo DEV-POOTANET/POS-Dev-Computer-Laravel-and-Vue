@@ -107,6 +107,12 @@ const routes = [
         component: () => import('../components/managePrd/AddSnForm.vue'),
         meta: { requiresAuth: true, roles: [1,2] },  
       },
+      {
+        path: '/EditCus/:id',
+        name: 'แก้ไขข้อมูลลูกคค้า',
+        component: () => import('../components/manageCus/EditCusForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
     ],
   },
   {

@@ -1,3 +1,20 @@
+<script setup>
+import manageCusComponent from '../../components/manageCus/manageCustomerComponent.vue';
+</script>
+
 <template>
-    <h1>Customer</h1>
+  <div>
+   <manageCusComponent></manageCusComponent>
+  </div>
 </template>
+
+<script>
+
+export default {
+  name: "manageCus",
+};
+</script>
+
+<style scoped>
+
+</style>

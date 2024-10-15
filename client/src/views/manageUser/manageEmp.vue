@@ -11,7 +11,7 @@ import manageCusComponent from '../../components/manageUser/manageCusComponent.v
 <script>
 
 export default {
-  name: "manageCus",
+  name: "manageEmp",
 };
 </script>
 

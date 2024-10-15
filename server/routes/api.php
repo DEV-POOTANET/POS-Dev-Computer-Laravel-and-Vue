@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SerialController;
+use App\Http\Controllers\CustomerController;
+
 
 
 // Route::get('/user', function (Request $request) {
@@ -36,5 +38,12 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('serials', [SerialController::class, 'store']);
     Route::get('serials/{id}', [SerialController::class, 'show']);
     Route::put('serials/{id}', [SerialController::class, 'update']);
+
+
+    Route::get('customer',[CustomerController::class,'index']);
+    Route::get('customer/{id}',[CustomerController::class,'show']);
+    Route::put('customer/{id}',[CustomerController::class,'update']);
+    Route::post('customer', [CustomerController::class, 'store']);
+    Route::put('suspendCus/{id}', [CustomerController::class, 'suspendCus']);
 
 });

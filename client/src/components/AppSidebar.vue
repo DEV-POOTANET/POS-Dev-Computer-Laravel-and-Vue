@@ -35,8 +35,8 @@ const sidebar = useSidebarStore()
 
 <style scoped>
 .sidebar-logo {
-  width: 100%;      /* ทำให้กว้างเต็มที่ */
-  height: auto;     /* ความสูงจะปรับตามสัดส่วนของรูป */
-  object-fit: cover; /* ทำให้รูปไม่ถูกบีบให้เสียสัดส่วน */
+  width: 100%;    
+  height: auto;   
+  object-fit: cover;
 }
 </style>
