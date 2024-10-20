@@ -73,6 +73,7 @@
 <script>
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
+import Swal from 'sweetalert2'
 export default {
   data() {
     return {
@@ -115,7 +116,14 @@ export default {
             Authorization: `Bearer ${token}`,
             },
         });
-        this.successMessage = 'เพิ่มสินค้าสำเร็จ!';
+        // this.successMessage = 'เพิ่มสินค้าสำเร็จ!';
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "เพิ่มสินค้าสำเร็จ!",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.clearForm();
       } catch (error) {
         console.error('Error adding product:', error);

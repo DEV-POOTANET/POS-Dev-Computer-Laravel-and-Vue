@@ -58,9 +58,10 @@
         </div>
         <div class="card-body">
             <div class="d-flex align-items-center mb-3">
-                <button class="btn btn-primary btn-sm me-2">เพิ่มลูกค้า</button>
-                <strong>ลูกค้า :</strong> Pootanet Rampuey
+                <button class="btn btn-primary btn-sm me-2" @click="openCustomerModal">เพิ่มลูกค้า</button>
+                <strong>ลูกค้า : {{ selectedCustomer ? selectedCustomer.Cus_fullname : 'ไม่ได้เลือก' }}</strong> 
             </div>
+
             <ul class="list-group mt-2">
                 <li
                     v-for="(item, index) in cart"
@@ -147,6 +148,50 @@ size="lg"
 </CModalFooter>
 </CModal>
 
+<CModal alignment="center" :visible="visibleCustomerModal" @close="closeCustomerModal">
+  <CModalHeader>
+    <CModalTitle>เลือกลูกค้า</CModalTitle>
+  </CModalHeader>
+  <CModalBody>
+     <div class="mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="ค้นหาเบอร์โทรศัพท์"
+        v-model="searchQueryCus"
+      />
+    </div>
+    <div v-if="loadingCustomers">กำลังโหลดลูกค้า...</div>
+    <table v-else class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ชื่อ</th>
+          <th scope="col">เบอร์โทรศัพท์</th>
+          <th scope="col">เลือก</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="customer in filteredCustomers" :key="customer.id">
+          <td>{{ customer.Cus_fullname }}</td>
+          <td>{{ customer.Cus_tel }}</td>
+          <td>
+            <button class="btn btn-success btn-sm" @click="selectCustomer(customer)">
+              เลือก
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div v-if="customers.length === 0" class="mt-3 text-center">ไม่มีข้อมูลลูกค้า</div>
+  </CModalBody>
+  <CModalFooter>
+    <CButton color="primary" @click="selectDefaultCustomer">ใช้ค่าเริ่มต้น</CButton>
+    <CButton color="secondary" @click="closeCustomerModal">ปิด</CButton>
+  </CModalFooter>
+</CModal>
+
+
+
 <CToaster class="p-3" placement="top-end">
 <CToast 
     v-if="successMessage" 
@@ -179,7 +224,7 @@ size="lg"
 
 <script setup>
 
-
+import Swal from 'sweetalert2'
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
@@ -205,6 +250,58 @@ const errorMessage = ref('');
 const paymentMethod = ref('0');
 const amountReceived = ref(0);
 const changeAmount = ref();
+
+// ฟังก์ชันดึงข้อมูลลูกค้าจาก API
+const customers = ref([]);
+const loadingCustomers = ref(false);
+const newCustomerName = ref("");
+const selectedCustomer = ref(null);
+const visibleCustomerModal = ref(false);
+const searchQueryCus = ref('');
+
+const fetchCustomers = async () => {
+  loadingCustomers.value = true;
+  try {
+    const response = await axios.get("http://localhost:8000/api/customer", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    customers.value = response.data.data;
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+  } finally {
+    loadingCustomers.value = false;
+  }
+};
+const filteredCustomers = computed(() =>
+    customers.value.filter(customer =>
+    customer.Cus_tel.includes(searchQueryCus.value) && customer.Cus_Status === 1
+    )
+);
+ // ฟังก์ชันเมื่อเลือกค่าเริ่มต้น (ID 1)
+const selectDefaultCustomer = () => {
+    const defaultCustomer = customers.value.find(c => c.id === 1);
+    if (defaultCustomer) {
+    selectCustomer(defaultCustomer);
+    } else {
+    console.error('ไม่พบลูกค้าที่มี ID 1');
+    }
+};
+const selectCustomer = (customer) => {
+    selectedCustomer.value = customer;
+    console.log('เลือก:', customer); 
+    closeCustomerModal();
+};
+// ฟังก์ชันเปิด modal ลูกค้า
+const openCustomerModal = () => {
+  visibleCustomerModal.value = true;
+};
+
+// ฟังก์ชันปิด modal ลูกค้า
+const closeCustomerModal = () => {
+  visibleCustomerModal.value = false;
+};
 
 const calculateChange = () => {
   const total = totalPrice.value;
@@ -290,7 +387,11 @@ const addSerialToCart = (serial) => {
 
 // ฟังก์ชันเคลียร์ตะกร้า
 const clearCart = () => {
-    cart.value = [];
+    cart.value = []; // รีเซ็ตตะกร้า
+    selectedCustomer.value = null; // รีเซ็ตลูกค้า
+    amountReceived.value = 0;
+    changeAmount.value = '';
+    paymentMethod.value = '0';
 };
 
 // ฟังก์ชันดึงหมวดหมู่สินค้า
@@ -349,11 +450,109 @@ const totalPrice = computed(() =>
 const formattedTotalPrice = computed(() => {
     const price = totalPrice.value;
     return `${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}฿`;
+    // totalPrice.value.toLocaleString() + '฿'
 });
+
+
+
+
+const uid = localStorage.getItem('uid') 
+const Ord_Time = new Date().toLocaleTimeString('th-TH', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false  // ใช้ระบบ 24 ชั่วโมง
+});
+const processPayment = async () => {
+
+
+  if (!selectedCustomer.value) {
+    // showMessage('error', 'กรุณาเลือกลูกค้า');
+    Swal.fire({
+    title: "error",
+    text: "กรุณาเลือกลูกค้า",
+    icon: "error"
+    });
+    return;
+  }
+
+  if (cart.value.length === 0) {
+    showMessage('error', 'ไม่มีสินค้าในตะกร้า');
+    return;
+  }
+  const total = totalPrice.value;
+    if (paymentMethod.value === '0' && amountReceived.value < total) {
+        // showMessage('error', 'เงินไม่พอชำระ');
+        Swal.fire({
+        title: "error",
+        text: "เงินไม่พอชำระ",
+        icon: "error"
+        });
+        return;
+    }
+
+  const confirmation = await Swal.fire({
+    title: "Save Order",
+    text: "คุณต้องการ Save Order ?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "ใช่",
+    cancelButtonText: "ไม่"
+  });
+
+
+  if (!confirmation.isConfirmed) {
+    return;
+  }
+  const orderDetails = cart.value.map(item => ({
+    Serial_id: item.serial_id,
+    OrdDtl_Price: item.Prd_Price,
+  }));
+
+  const orderData = {
+    Cus_id: selectedCustomer.value.id,
+    Emp_id:parseInt(uid), 
+    Ord_Date: new Date().toISOString().split('T')[0], // วันที่
+    Ord_Time: Ord_Time,
+    Ord_TotalAmount: totalPrice.value, // รวมยอด
+    Ord_Payment: parseInt(paymentMethod.value), // วิธีการชำระเงิน
+    Ord_Status: 1, // สถานะ
+    order_details: orderDetails, // รายละเอียดสินค้า
+  };
+
+  try {
+    const response = await axios.post('http://localhost:8000/api/order', orderData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    if (response.status === 201) {
+    //   showMessage('success', 'บันทึกข้อมูลตะกร้าสำเร็จ');
+        await Swal.fire('สำเร็จ', 'ชำระเงินเรียบร้อย', 'success');
+        printCart();
+        clearCart(); // เคลียร์ตะกร้าหลังจากชำระเงินเสร็จ
+    }
+  } catch (error) {
+    console.log(orderData)
+    console.log('Error saving order:', error);
+    showMessage('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูลตะกร้า');
+  }
+};
+const printCart = () => {
+  const printContents = document.querySelector('.col-md-4').innerHTML;
+  const originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = printContents; // แสดงเฉพาะส่วนตะกร้า
+  window.print(); // สั่งพิมพ์
+  document.body.innerHTML = originalContents; // คืนค่าเนื้อหาทั้งหมด
+
+  location.reload(); // รีโหลดหน้าเพื่อกลับมาสู่หน้าปกติ
+};
 
 onMounted(() => {
     fetchCategories();
     fetchProducts();
+    fetchCustomers();
 });
 
 
@@ -363,5 +562,18 @@ onMounted(() => {
 .active {
 background-color: #0d6efd;
 color: white;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .col-md-4, .col-md-4 * {
+    visibility: visible;
+  }
+  .col-md-4 {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }
 </style>

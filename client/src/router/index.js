@@ -113,6 +113,18 @@ const routes = [
         component: () => import('../components/manageCus/EditCusForm.vue'),
         meta: { requiresAuth: true, roles: [1,2] },  
       },
+      {
+        path: '/addCustomer',
+        name: 'เพิ่มข้อมูลลูกคค้า',
+        component: () => import('../components/manageCus/RegisterCusForm.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
+      {
+        path: '/order',
+        name: 'รายการขาย',
+        component: () => import('../views/order/order.vue'),
+        meta: { requiresAuth: true, roles: [1,2] },  
+      },
     ],
   },
   {

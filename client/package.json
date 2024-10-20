@@ -30,6 +30,7 @@
     "chart.js": "^4.4.3",
     "pinia": "^2.1.7",
     "simplebar-vue": "^2.3.5",
+    "sweetalert2": "^11.14.3",
     "vue": "^3.4.28",
     "vue-router": "^4.3.3"
   },

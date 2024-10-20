@@ -7,6 +7,8 @@ use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SerialController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
+
 
 
 
@@ -45,5 +47,8 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::put('customer/{id}',[CustomerController::class,'update']);
     Route::post('customer', [CustomerController::class, 'store']);
     Route::put('suspendCus/{id}', [CustomerController::class, 'suspendCus']);
+
+    Route::post('order', [OrderController::class, 'store']);
+
 
 });

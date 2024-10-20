@@ -12,9 +12,20 @@ export default [
     roles: [1, 2]
   },
   {
+    component: 'CNavTitle',
+    name: 'การขายสินค้า',
+  },
+  {
     component: 'CNavItem',
     name: 'ขายสินค้า',
     to: '/sell',    
+    icon: 'cil-notes',
+    roles: [1, 2]
+  },
+  {
+    component: 'CNavItem',
+    name: 'รายการขาย',
+    to: '/order',    
     icon: 'cil-notes',
     roles: [1, 2]
   },
