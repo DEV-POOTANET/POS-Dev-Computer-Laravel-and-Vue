@@ -48,7 +48,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('customer', [CustomerController::class, 'store']);
     Route::put('suspendCus/{id}', [CustomerController::class, 'suspendCus']);
 
+    Route::get('order', [OrderController::class, 'index']); 
     Route::post('order', [OrderController::class, 'store']);
-
+    Route::get('/order-details/{orderId}', [OrderController::class, 'getOrderDetails']);
+    Route::get('/sales/monthly', [OrderController::class, 'getSalesByMonth']);
+    Route::get('/orders/summary', [OrderController::class, 'getOrderSummary']);
 
 });

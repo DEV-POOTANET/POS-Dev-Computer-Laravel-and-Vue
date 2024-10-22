@@ -1,3 +1,20 @@
+<script setup>
+import manageDashdoard from '../../components/dashdoard/manageDashdoard.vue';
+</script>
+
 <template>
-  <h1>Dashboard</h1>
+  <div>
+   <manageDashdoard></manageDashdoard>
+  </div>
 </template>
+
+<script>
+
+export default {
+  name: "manageDas",
+};
+</script>
+
+<style scoped>
+
+</style>
